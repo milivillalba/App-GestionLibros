@@ -20,6 +20,8 @@ export const CtrlGetAllAuthores = async (req, res) => {
   try {
     const AllAuthores = await AuthorModel.find().populate("Books", {
       _id: 0,
+      createdAt: 0,
+      updatedAt: 0,
     });
 
     res.status(200).json(AllAuthores);

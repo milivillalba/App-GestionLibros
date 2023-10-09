@@ -2,12 +2,27 @@ import { BooksModel } from "../models/blook.js";
 
 //Control para crear un libro
 
-export const CtrlCreateNewBlook = async (res, req) => {
+export const CtrlCreateNewBlook = async (req, res) => {
   const { title, genero, year, authorId } = req.body;
+
   try {
-    const newBlook = new BooksModel({ title, genero, year, authorId });
+    const file = req.files.filename;
+    const newBlook = new BooksModel({
+      title,
+      genero,
+      year,
+      converImage: file.name,
+      authorId,
+    });
 
     await newBlook.save();
+
+    let path = `src/Archivos/${file.name}`;
+    file.mv(path, (err) => {
+      if (err) {
+        return res.status(500).send(err);
+      }
+    });
 
     res.status(201).json("Se creo el libro correctamente", newBlook);
   } catch (error) {
@@ -20,7 +35,11 @@ export const CtrlCreateNewBlook = async (res, req) => {
 
 export const CtrlGetAllBlooks = async (req, res) => {
   try {
-    const AllBlook = await BooksModel.find();
+    const AllBlook = await BooksModel.find().populate("Author", {
+      _id: 0,
+      createdAt: 0,
+      updatedAt: 0,
+    });
 
     res.status(200).json(AllBlook);
   } catch (error) {
@@ -49,15 +68,16 @@ export const CtrlGetBlookId = async (req, res) => {
 
 //Editar al libro
 
-export const CtrlUpdateBlook = async (res, req) => {
+export const CtrlUpdateBlook = async (req, res) => {
   const BlookId = req.params.id;
-  const { title, genero, year, authorId } = req.body;
+  const { title, genero, year, converImage, authorId } = req.body;
 
   try {
     await BooksModel.findByIdAndUpdate(BlookId, {
       title,
       genero,
       year,
+      converImage,
       authorId,
     });
     res.sendStatus(202);
@@ -69,7 +89,7 @@ export const CtrlUpdateBlook = async (res, req) => {
 
 //eliminar al Libro
 
-export const CtrlDeleteBlook = async (res, req) => {
+export const CtrlDeleteBlook = async (req, res) => {
   const BlookId = req.params.id;
   try {
     await BooksModel.findByIdAndDelete(BlookId);

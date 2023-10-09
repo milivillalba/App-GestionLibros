@@ -11,6 +11,10 @@ const Books = new Schema(
     year: {
       type: Date,
     },
+    converImage: {
+      type: String,
+      required: true,
+    },
     authorId: {
       type: Types.ObjectId,
       ref: "Author",
