@@ -1,5 +1,5 @@
 import { Router } from "express";
-const routerBook = Router();
+
 import {
   CtrlCreateNewBlook,
   CtrlGetAllBlooks,
@@ -7,6 +7,7 @@ import {
   CtrlGetBlookId,
   CtrlUpdateBlook,
 } from "../controllers/Blook.controller.js";
+const routerBook = Router();
 
 //traer todos los libros
 routerBook.get("/", CtrlGetAllBlooks);

@@ -14,15 +14,11 @@ export const CtrlCreateAuthor = async (req, res) => {
   }
 };
 
-//listar doto los authores
+//listar todo los authores
 
 export const CtrlGetAllAuthores = async (req, res) => {
   try {
-    const AllAuthores = await AuthorModel.find().populate("Books", {
-      _id: 0,
-      createdAt: 0,
-      updatedAt: 0,
-    });
+    const AllAuthores = await AuthorModel.find();
 
     res.status(200).json(AllAuthores);
   } catch (error) {

@@ -17,8 +17,9 @@ export const CtrlCreateNewBlook = async (req, res) => {
 
     await newBlook.save();
 
-    let path = `src/Archivos/${file.name}`;
+    let path = `src/Archivos/${file.name}`; //la variable path contiene una cadena de texto, esa cadena es una ruta de archivo que compone "src/Archivo" y el nombre del archivo( osea de la imagen )"file.name"
     file.mv(path, (err) => {
+      //la funcion mv se utiliza para mover el archivo al destino que especifique
       if (err) {
         return res.status(500).send(err);
       }
@@ -27,7 +28,7 @@ export const CtrlCreateNewBlook = async (req, res) => {
     res.status(201).json("Se creo el libro correctamente", newBlook);
   } catch (error) {
     console.log(error);
-    res.status(500).json({ mensage: "No se creo el libro " });
+    res.status(500).json();
   }
 };
 
@@ -35,18 +36,16 @@ export const CtrlCreateNewBlook = async (req, res) => {
 
 export const CtrlGetAllBlooks = async (req, res) => {
   try {
-    const AllBlook = await BooksModel.find().populate("Author", {
-      _id: 0,
-      createdAt: 0,
-      updatedAt: 0,
-    });
+    const AllBlookAuthor = await BooksModel.find().populate("authorId", {});
 
-    res.status(200).json(AllBlook);
+    res.status(200).json(AllBlookAuthor);
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: "No se encontraron Los Libros" });
+    res.status(500).json({ message: "error interno del servidor" });
   }
 };
+
+//Agrupar los libros por su genero
 
 //Traer un Libro por su id
 export const CtrlGetBlookId = async (req, res) => {
@@ -62,7 +61,7 @@ export const CtrlGetBlookId = async (req, res) => {
     res.status(200).json(Blook);
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: "No se pudo traer al Author" });
+    res.status(500).json({ message: "eero del servidor " });
   }
 };
 
